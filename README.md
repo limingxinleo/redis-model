@@ -10,40 +10,94 @@ BaseModel.php
 ~~~
 <?php
 
-namespace App\Models\RedisModel;
+namespace limx\Tests\App\RedisModel;
 
-use limx\utils\RedisModel\Model;
+use limx\Models\RedisModel\Model;
 
 class BaseModel extends Model
 {
+    /**
+     * @desc   初始化Redis客户端
+     * @author limx
+     * @param $parameters
+     * @param $options
+     */
     protected function initRedisClient($parameters, $options)
     {
         if (!isset($parameters['host'])) {
-            $parameters['host'] = env('REDIS_HOST', 'localhost');
+            $parameters['host'] = '127.0.0.1';
         }
 
         if (!isset($parameters['port'])) {
-            $parameters['port'] = env('REDIS_PORT', 6379);
+            $parameters['port'] = 6379;
         }
 
         if (!isset($parameters['auth'])) {
-            $parameters['password'] = env('REDIS_AUTH', null);
+            $parameters['password'] = '910123';
         }
 
         if (!isset($parameters['database'])) {
-            $parameters['database'] = env('REDIS_INDEX', 0);
+            $parameters['database'] = 0;
         }
 
         parent::initRedisClient($parameters, $options);
+    }
+
+    /**
+     * @desc   获取Redis模型的Key值
+     * @author limx
+     * @param $id
+     * @return mixed
+     */
+    public function getPrimaryKey($id)
+    {
+        return parent::getPrimaryKey($id);
+    }
+
+    /**
+     * @desc   覆盖更新
+     * @author limx
+     * @param $primaryKey
+     * @param $data
+     * @return bool
+     */
+    public function replace($primaryKey, $data, $ttl = null)
+    {
+        $info = array_intersect_key($data, array_flip((array)$this->fillable));
+        $data = array_merge(array_fill_keys($this->fillable, ''), $info);
+        return $this->create($primaryKey, $data, $ttl);
+    }
+
+    /**
+     * @desc   删除
+     * @author limx
+     * @param string $primaryKey
+     * @return bool|int
+     */
+    public function destroy($primaryKey)
+    {
+        if (!is_array($primaryKey)) {
+            $primaryKey = [$primaryKey];
+        }
+
+        return $this->whereIn($this->primaryFieldName, $primaryKey)->delete();
+    }
+
+    /**
+     * @desc   删除所有
+     * @author limx
+     * @return bool|int
+     */
+    public function flushAll()
+    {
+        return $this->delete();
     }
 }
 ~~~
 
 User.php
 ~~~
-<?php
-
-namespace App\Models\RedisModel;
+namespace limx\Tests\App\RedisModel;
 
 class User extends BaseModel
 {
@@ -52,28 +106,6 @@ class User extends BaseModel
     protected $type = 'hash';
 
     protected $fillable = ['id', 'username', 'name'];
-
-    public function replace($primaryKey, $data)
-    {
-        $info = array_intersect_key($data, array_flip((array)$this->fillable));
-        $data = array_merge(array_fill_keys($this->fillable, ''), $info);
-        return $this->create($primaryKey, $data);
-    }
-
-
-    public function destroy($primaryKey)
-    {
-        if (!is_array($primaryKey)) {
-            $primaryKey = [$primaryKey];
-        }
-
-        return $this->whereIn('id', $primaryKey)->delete();
-    }
-
-    public function flushAll()
-    {
-        return $this->delete();
-    }
 
 }
 ~~~
