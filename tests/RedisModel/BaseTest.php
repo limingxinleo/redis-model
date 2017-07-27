@@ -13,6 +13,13 @@ use limx\Tests\App\RedisModel\User;
 
 class BaseTest extends TestCase
 {
+    protected $id = 1;
+    protected $data = [
+        'id' => 1,
+        'username' => 'limx',
+        'name' => '李铭昕'
+    ];
+
     public function testBase()
     {
         $this->assertTrue(true);
@@ -21,12 +28,27 @@ class BaseTest extends TestCase
     public function testReplaceCase()
     {
         $user = new User();
-        $data = [
-            'id' => 1,
-            'username' => 'limx',
-            'name' => '李铭昕'
-        ];
-        $res = $user->replace(1, $data);
+        $res = $user->replace($this->id, $this->data);
         $this->assertTrue($res);
+    }
+
+    public function testTtlCase()
+    {
+        $user = new User();
+        $res = $user->replace($this->id, $this->data, 60);
+        $this->assertTrue($res);
+
+        $this->assertTrue($user->where('id', 1)->ttl() > 0);
+    }
+
+    public function testUpdateCase()
+    {
+        $user = new User();
+        $data = $this->data;
+        $data['username'] = 'lmx';
+        $user->where('id', 1)->update($data, 60);
+
+        $res = $user->where('id', 1)->first();
+        $this->assertEquals($data, $res);
     }
 }
