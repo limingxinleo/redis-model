@@ -33,7 +33,7 @@ class BaseModel extends Model
         }
 
         if (!isset($parameters['auth'])) {
-            $parameters['password'] = '910123';
+            $parameters['password'] = null;
         }
 
         if (!isset($parameters['database'])) {
