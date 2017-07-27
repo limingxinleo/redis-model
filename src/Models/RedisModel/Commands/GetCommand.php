@@ -1,15 +1,16 @@
 <?php
 
-namespace limx\utils\RedisModel\Commands;
+namespace limx\Models\RedisModel\Commands;
 
-class LrangeCommand extends Command
+
+class GetCommand extends Command
 {
     public function getScript()
     {
         $script = <<<LUA
     local values = {}; 
     for i,v in ipairs(KEYS) do 
-        values[#values+1] = redis.pcall('lrange', v, 0, -1); 
+        values[#values+1] = redis.pcall('get',v); 
     end 
     return {KEYS,values};
 LUA;

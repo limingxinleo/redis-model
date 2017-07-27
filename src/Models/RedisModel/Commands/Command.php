@@ -1,8 +1,8 @@
 <?php
 
-namespace limx\utils\RedisModel\Commands;
+namespace limx\Models\RedisModel\Commands;
 
-use limx\utils\RedisModel\Exception;
+use limx\Models\RedisModel\Exception;
 use Predis\Command\ScriptCommand;
 
 abstract class Command extends ScriptCommand

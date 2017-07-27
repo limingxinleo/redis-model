@@ -1,8 +1,8 @@
 <?php
 
-namespace limx\utils\RedisModel;
+namespace limx\Models\RedisModel;
 
-use limx\utils\RedisModel\Exception;
+use limx\Models\RedisModel\Exception;
 
 class QueryBuilder
 {

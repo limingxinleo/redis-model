@@ -1,5 +1,5 @@
 <?php
-namespace limx\utils\RedisModel\Commands;
+namespace limx\Models\RedisModel\Commands;
 
 class ZaddCommand extends Command
 {

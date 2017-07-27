@@ -1,5 +1,5 @@
 <?php
-namespace limx\utils\RedisModel;
+namespace limx\Models\RedisModel;
 
 class Exception extends \Exception
 {

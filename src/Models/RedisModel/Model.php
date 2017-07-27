@@ -1,11 +1,11 @@
 <?php
 
-namespace limx\utils\RedisModel;
+namespace limx\Models\RedisModel;
 
-use limx\utils\RedisModel\Exception;
-use limx\utils\RedisModel\Commands\Command;
-use limx\utils\RedisModel\Commands\Factory;
-use limx\utils\RedisModel\FactoryInterface;
+use limx\Models\RedisModel\Exception;
+use limx\Models\RedisModel\Commands\Command;
+use limx\Models\RedisModel\Commands\Factory;
+use limx\Models\RedisModel\FactoryInterface;
 use Predis\Client as RedisClient;
 
 abstract class Model
